@@ -7,6 +7,7 @@ import re
 import os
 import json
 import requests
+import datetime
 # https://my.telegram.org/apps
 
 KEYWORD_SMM = []
@@ -47,11 +48,15 @@ def sheet_open():
 def get_column_data(list_name: str):
     return sheet_open().open('Фриланс заказы | Асхаб').worksheet(list_name).get_all_records()
 
+# Настройка логирования
+logging.basicConfig(filename='logfile_err.log', level=logging.ERROR, format='%(asctime)s %(message)s')
+
 #юзербот
 api_id = "14784408"
 api_hash = "82bc0317e29988a8afb596880a99793e"
 chat_id = "-1001786162328"
 app = Client("my_account", api_id=api_id, api_hash=api_hash)
+
 
 def update_keyword_exceptons():
     global KEYWORD_SMM, EXCEPTONS_SMM, KEYWORD_ASSISTANT, \
@@ -123,10 +128,17 @@ async def message_from_channel(client, message):
                                      username=message.chat.username,
                                      platform_id="123")
 
-@app.on_message(filters.text & ~filters.user("infobizaa_bot"))
+@app.on_message(filters.text)
 async def message_from_chat(client, message):
+    try:
+        username = message.from_user.username if message.from_user.username is not None else "None"
+        print(username)
+    except Exception as e:
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        logging.error(f"Time: {current_time} - Error method message_from_chat : {e}")
+
     await run_filterint_all_category(message_text=message.text, 
-                                     username=message.from_user.username,
+                                     username=username,
                                      platform_id=message.from_user.id)
 
 async def run_filterint_all_category(message_text, username, platform_id):
@@ -180,8 +192,8 @@ async def filtering_messages_by_category(category_name, message: str, keywords: 
                 if re.search(rf"{word_ex}", message.lower()):
                     return False
             except AttributeError as e:
-                print(f"Функция filtering_messages_by_category. (exceptons) Слово исключение: {word_ex} Ошибка: {e}")
-                await app.send_message(chat_id=int(chat_id), text=f"filtering_messages_by_category err: {e}")
+                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logging.error(f"Time: {current_time} - Error method filtering_messages_by_category, expection word {word_ex}: Errors: {e}")
 
         for word_key in keywords: 
             try:
@@ -190,16 +202,16 @@ async def filtering_messages_by_category(category_name, message: str, keywords: 
                     return True
                  
             except AttributeError as e:
-                print(f"Функция filtering_messages_by_category. (keywords) ключевое слово: {word_key} Ошибка: {e}")
-                await app.send_message(chat_id=int(chat_id), text=f"Функция filtering_messages_by_category. (keywords) ключевое слово: {word_key} Ошибка: {e}")
+                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logging.error(f"Time: {current_time} - Error method filtering_messages_by_category,  key word {word_key}: Errors: {e}")
         return False
 
 async def send_message_api(message, category_name, username, platform_id): 
-    links_from_message = await extract_links_and_mentions(text=message, regular='http\S+|www\S+', method=1)
-    username_from_message = await extract_links_and_mentions(text=message, regular='@\w+', method=1)
+    links_from_message = await extract_links_and_mentions(text=message, regular=r'http\S+|www\S+', method=1)
+    username_from_message = await extract_links_and_mentions(text=message, regular=r'@\w+', method=1)
     
-    message_false = await extract_links_and_mentions(text=message, regular='http\S+|www\S+', method=2)
-    message_false = await extract_links_and_mentions(text=message_false, regular='@\w+', method=2)
+    message_false = await extract_links_and_mentions(text=message, regular=r'http\S+|www\S+', method=2)
+    message_false = await extract_links_and_mentions(text=message_false, regular=r'@\w+', method=2)
 
     api_request({
         "params": {
@@ -242,6 +254,7 @@ def api_request(data):
             print(f"Выполнении запроса: {response.text}")
             return False
     except Exception as e:
-        print(f"Ошибка при выполнении запроса: {str(e)}")
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        logging.error(f"Time: {current_time} - Error method api_request Errors: {e}")
 
 app.run()
