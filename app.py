@@ -40,17 +40,22 @@ async def run_bot(app_name, api_id, api_hash):
     @app.on_message(filters.text)
     async def message_from_chat(client, message):
         try:
-            username = message.from_user.username if message.from_user.username is not None else "None"
+            username = "None"
+            platform_id = "None"
+            if message.from_user:
+                username = message.from_user.username if message.from_user.username is not None else "None"
+                platform_id = message.from_user.id
+            else:
+                platform_id = f"{random.randint(1, 999999) + random.randint(1, 999999)}"
+
+            await FilterByCategory.run_filterint_all_category(
+                message_text=message.text, 
+                username=username,
+                platform_id=platform_id
+            )
         except Exception as e:
             current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             logging.error(f"Time: {current_time} - Error method message_from_chat : {e}")
-            username = "None"
-            
-        await FilterByCategory.run_filterint_all_category(
-            message_text=message.text, 
-            username=username,
-            platform_id=message.from_user.id
-        )
 
     await app.start()
     print("Bot started!")
