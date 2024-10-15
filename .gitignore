@@ -1,5 +1,6 @@
 .env
 *.session
+app_2/*.session
 __pycache__
 **/__pycache__/
 test.py
@@ -7,3 +8,8 @@ db/db_word.json
 !db/
 logfile_err.log
 logfile.log
+
+app_2/logfile_err.log
+app_2/logfile.log
+
+savvy-temple-380003-e855ebfc1557.json
