@@ -44,7 +44,8 @@ async def run_bot(app_name, api_id, api_hash):
         except Exception as e:
             current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             logging.error(f"Time: {current_time} - Error method message_from_chat : {e}")
-
+            username = "None"
+            
         await FilterByCategory.run_filterint_all_category(
             message_text=message.text, 
             username=username,
