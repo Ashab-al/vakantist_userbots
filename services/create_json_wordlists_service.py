@@ -17,6 +17,8 @@ class DataWord:
         exceptions_tehspec = [item['Слова исключения Тех-спец'] for item in filter(lambda item: item["Слова исключения Тех-спец"] != 0 and item["Слова исключения Тех-спец"] != '', data_sheet)]
         keyword_getcourse = [item['Ключевые слова getcourse'] for item in filter(lambda item: item["Ключевые слова getcourse"] != 0 and item["Ключевые слова getcourse"] != '', data_sheet)]
         exceptions_getcourse = [item['Слова исключения getcourse'] for item in filter(lambda item: item["Слова исключения getcourse"] != 0 and item["Слова исключения getcourse"] != '', data_sheet)]
+        keyword_сontextual_advertising = [item['Ключевые слова Контекстная реклама'] for item in filter(lambda item: item["Ключевые слова Контекстная реклама"] != 0 and item["Ключевые слова Контекстная реклама"] != '', data_sheet)]
+        exceptions_сontextual_advertising = [item['Слова исключения Контекстная реклама'] for item in filter(lambda item: item["Слова исключения Контекстная реклама"] != 0 and item["Слова исключения Контекстная реклама"] != '', data_sheet)]   
         exceptions_username = [item['Исключения отправители'] for item in filter(lambda item: item["Исключения отправители"] != 0 and item["Исключения отправители"] != '', data_sheet)]
         general_filter_exceptions = [item['Общий фильр'] for item in filter(lambda item: item["Общий фильр"] != 0 and item["Общий фильр"] != '', data_sheet)]
 
@@ -29,6 +31,7 @@ class DataWord:
             "target": {"keyword": keyword_target, "exception": exceptions_target},
             "tehspec": {"keyword": keyword_tehspec, "exception": exceptions_tehspec},
             "getcourse": {"keyword": keyword_getcourse, "exception": exceptions_getcourse},
+            "сontextual_advertising": {"keyword": keyword_сontextual_advertising, "exception": exceptions_сontextual_advertising},
             "username": {"exception": exceptions_username},
             "general_filter": {"exception": general_filter_exceptions}
         }

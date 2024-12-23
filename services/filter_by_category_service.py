@@ -28,7 +28,8 @@ class FilterByCategory:
                 "site":"Сайты",
                 "target": "Таргет",
                 "tehspec": "Тех-спец",
-                "getcourse": "GetCourse"
+                "getcourse": "GetCourse",
+                "сontextual_advertising": "Контекстная реклама"
             }
             for category in list(categories.keys()):
                 await FilterByCategory.filtering_messages_by_category(category_name=categories[category], message=message_text,
